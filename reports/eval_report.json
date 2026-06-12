@@ -1,0 +1,510 @@
+{
+  "generated_at": "2026-06-11T15:52:48.471367+00:00",
+  "forecasting": {
+    "per_symbol": {
+      "BHARTIARTL": {
+        "best_model": "arima",
+        "lstm_metrics": {
+          "mae": 17.647901861791368,
+          "rmse": 23.82585653666316,
+          "mape_pct": 0.9101208848186613,
+          "directional_accuracy": 0.46153846153846156,
+          "n_samples": 248
+        },
+        "arima_metrics": {
+          "mae": 17.63495989441628,
+          "rmse": 23.856064471259696,
+          "mape_pct": 0.9087629018281087,
+          "directional_accuracy": 0.46153846153846156,
+          "n_samples": 248
+        }
+      },
+      "HDFCBANK": {
+        "best_model": "arima",
+        "lstm_metrics": {
+          "mae": 7.5498811991010575,
+          "rmse": 10.361616022023034,
+          "mape_pct": 0.853785945519889,
+          "directional_accuracy": 0.5303643724696356,
+          "n_samples": 248
+        },
+        "arima_metrics": {
+          "mae": 7.542483107142647,
+          "rmse": 10.352800091288405,
+          "mape_pct": 0.8524849553101987,
+          "directional_accuracy": 0.5141700404858299,
+          "n_samples": 248
+        }
+      },
+      "HINDUNILVR": {
+        "best_model": "arima",
+        "lstm_metrics": {
+          "mae": 23.499922779405022,
+          "rmse": 31.46724363387264,
+          "mape_pct": 0.9980457126638288,
+          "directional_accuracy": 0.4534412955465587,
+          "n_samples": 248
+        },
+        "arima_metrics": {
+          "mae": 22.812233741928207,
+          "rmse": 30.686357501748166,
+          "mape_pct": 0.9679545728676211,
+          "directional_accuracy": 0.43724696356275305,
+          "n_samples": 248
+        }
+      },
+      "ICICIBANK": {
+        "best_model": "arima",
+        "lstm_metrics": {
+          "mae": 11.75449595613744,
+          "rmse": 15.47277772879196,
+          "mape_pct": 0.8703070799582416,
+          "directional_accuracy": 0.5060728744939271,
+          "n_samples": 248
+        },
+        "arima_metrics": {
+          "mae": 11.711196299252217,
+          "rmse": 15.466077097735726,
+          "mape_pct": 0.8669537200116787,
+          "directional_accuracy": 0.5101214574898786,
+          "n_samples": 248
+        }
+      },
+      "INFY": {
+        "best_model": "arima",
+        "lstm_metrics": {
+          "mae": 17.091573055972287,
+          "rmse": 23.987244371636134,
+          "mape_pct": 1.2057110924465955,
+          "directional_accuracy": 0.5263157894736842,
+          "n_samples": 248
+        },
+        "arima_metrics": {
+          "mae": 17.083727340833825,
+          "rmse": 23.970685304549658,
+          "mape_pct": 1.2046813980911615,
+          "directional_accuracy": 0.5303643724696356,
+          "n_samples": 248
+        }
+      },
+      "ITC": {
+        "best_model": "arima",
+        "lstm_metrics": {
+          "mae": 2.944867023965702,
+          "rmse": 4.426249434039118,
+          "mape_pct": 0.8371647929371889,
+          "directional_accuracy": 0.4979757085020243,
+          "n_samples": 248
+        },
+        "arima_metrics": {
+          "mae": 2.9183027325302286,
+          "rmse": 4.405006570189635,
+          "mape_pct": 0.82865735493085,
+          "directional_accuracy": 0.4979757085020243,
+          "n_samples": 248
+        }
+      },
+      "KOTAKBANK": {
+        "best_model": "lstm",
+        "lstm_metrics": {
+          "mae": 3.8886122150823814,
+          "rmse": 5.378800905407193,
+          "mape_pct": 0.9613388804516124,
+          "directional_accuracy": 0.4898785425101215,
+          "n_samples": 248
+        },
+        "arima_metrics": {
+          "mae": 3.912018481632283,
+          "rmse": 5.396663261916754,
+          "mape_pct": 0.9667123641085194,
+          "directional_accuracy": 0.48582995951417,
+          "n_samples": 248
+        }
+      },
+      "NIFTY50": {
+        "best_model": "arima",
+        "lstm_metrics": {
+          "mae": 147.44460404008063,
+          "rmse": 197.12024933214423,
+          "mape_pct": 0.599235716611644,
+          "directional_accuracy": 0.516260162601626,
+          "n_samples": 247
+        },
+        "arima_metrics": {
+          "mae": 147.02916274866087,
+          "rmse": 195.8946614193688,
+          "mape_pct": 0.5973254634120297,
+          "directional_accuracy": 0.5203252032520326,
+          "n_samples": 247
+        }
+      },
+      "RELIANCE": {
+        "best_model": "lstm",
+        "lstm_metrics": {
+          "mae": 13.177058960733461,
+          "rmse": 17.991809994061914,
+          "mape_pct": 0.9287656738721072,
+          "directional_accuracy": 0.44534412955465585,
+          "n_samples": 248
+        },
+        "arima_metrics": {
+          "mae": 13.253067877648084,
+          "rmse": 18.049009451076138,
+          "mape_pct": 0.9340370769821608,
+          "directional_accuracy": 0.4534412955465587,
+          "n_samples": 248
+        }
+      },
+      "SBIN": {
+        "best_model": "arima",
+        "lstm_metrics": {
+          "mae": 9.332588770302937,
+          "rmse": 14.458895716363173,
+          "mape_pct": 0.9439646718703105,
+          "directional_accuracy": 0.47368421052631576,
+          "n_samples": 248
+        },
+        "arima_metrics": {
+          "mae": 9.320443971037706,
+          "rmse": 14.44011080641046,
+          "mape_pct": 0.9430373245369735,
+          "directional_accuracy": 0.4898785425101215,
+          "n_samples": 248
+        }
+      },
+      "SENSEX": {
+        "best_model": "arima",
+        "lstm_metrics": {
+          "mae": 483.612410264262,
+          "rmse": 644.1333660887193,
+          "mape_pct": 0.6062976723128941,
+          "directional_accuracy": 0.5,
+          "n_samples": 247
+        },
+        "arima_metrics": {
+          "mae": 480.38587231900385,
+          "rmse": 639.0395661226719,
+          "mape_pct": 0.6021153342840744,
+          "directional_accuracy": 0.5,
+          "n_samples": 247
+        }
+      },
+      "TCS": {
+        "best_model": "arima",
+        "lstm_metrics": {
+          "mae": 30.859807784321298,
+          "rmse": 44.07008936838983,
+          "mape_pct": 1.0876914692408364,
+          "directional_accuracy": 0.5101214574898786,
+          "n_samples": 248
+        },
+        "arima_metrics": {
+          "mae": 30.08262525715263,
+          "rmse": 43.383241475825955,
+          "mape_pct": 1.0588871553445025,
+          "directional_accuracy": 0.5141700404858299,
+          "n_samples": 248
+        }
+      }
+    },
+    "summary": {
+      "lstm_mean_mae": 64.0669769925963,
+      "arima_mean_mae": 63.6405078142699,
+      "lstm_mean_dir_acc": 0.4925830837255741,
+      "arima_mean_dir_acc": 0.49292183711310805,
+      "n_symbols_evaluated": 12
+    }
+  },
+  "anomaly": {
+    "trained": true,
+    "best": "autoencoder",
+    "results": {
+      "isolation_forest": {
+        "roc_auc": 0.9995557201036653,
+        "precision_at_5pct": 0.9657534246575342,
+        "n_test": 2921,
+        "n_anomalies_injected": 146
+      },
+      "autoencoder": {
+        "roc_auc": 1.0,
+        "precision_at_5pct": 1.0,
+        "threshold": 0.48572173714637756,
+        "n_test": 2921
+      }
+    },
+    "n_train": 11687,
+    "feature_cols": [
+      "ret_1d",
+      "ret_5d",
+      "ret_20d",
+      "roll_vol_5",
+      "roll_vol_20",
+      "log_vol_z",
+      "hl_range"
+    ]
+  },
+  "sentiment": {
+    "trained": true,
+    "labels": [
+      "negative",
+      "neutral",
+      "positive"
+    ],
+    "best": "tfidf",
+    "results": {
+      "n_train": 288,
+      "n_test": 72,
+      "labels": [
+        "negative",
+        "neutral",
+        "positive"
+      ],
+      "tfidf_baseline": {
+        "accuracy": 1.0,
+        "macro_precision": 1.0,
+        "macro_recall": 1.0,
+        "macro_f1": 1.0,
+        "per_class": {
+          "negative": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 24
+          },
+          "neutral": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 24
+          },
+          "positive": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 24
+          }
+        },
+        "confusion_matrix": [
+          [
+            24,
+            0,
+            0
+          ],
+          [
+            0,
+            24,
+            0
+          ],
+          [
+            0,
+            0,
+            24
+          ]
+        ],
+        "labels": [
+          "negative",
+          "neutral",
+          "positive"
+        ]
+      },
+      "distilbert": {
+        "accuracy": 0.9305555555555556,
+        "macro_precision": 0.9425287356321839,
+        "macro_recall": 0.9305555555555555,
+        "macro_f1": 0.9297937691970163,
+        "per_class": {
+          "negative": {
+            "precision": 1.0,
+            "recall": 0.7916666666666666,
+            "f1": 0.8837209302325582,
+            "support": 24
+          },
+          "neutral": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 24
+          },
+          "positive": {
+            "precision": 0.8275862068965517,
+            "recall": 1.0,
+            "f1": 0.9056603773584906,
+            "support": 24
+          }
+        },
+        "confusion_matrix": [
+          [
+            19,
+            0,
+            5
+          ],
+          [
+            0,
+            24,
+            0
+          ],
+          [
+            0,
+            0,
+            24
+          ]
+        ],
+        "labels": [
+          "negative",
+          "neutral",
+          "positive"
+        ]
+      },
+      "best": "tfidf"
+    }
+  },
+  "legal": {
+    "trained": true,
+    "labels": [
+      "compliance",
+      "regulatory",
+      "litigation",
+      "governance"
+    ],
+    "best": "tfidf",
+    "results": {
+      "n_train": 387,
+      "n_test": 96,
+      "labels": [
+        "compliance",
+        "regulatory",
+        "litigation",
+        "governance"
+      ],
+      "tfidf_baseline": {
+        "accuracy": 1.0,
+        "macro_precision": 1.0,
+        "macro_recall": 1.0,
+        "macro_f1": 1.0,
+        "per_class": {
+          "compliance": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 24
+          },
+          "regulatory": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 24
+          },
+          "litigation": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 24
+          },
+          "governance": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 24
+          }
+        },
+        "confusion_matrix": [
+          [
+            24,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            24,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            24,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            24
+          ]
+        ],
+        "labels": [
+          "compliance",
+          "regulatory",
+          "litigation",
+          "governance"
+        ]
+      },
+      "distilbert": {
+        "accuracy": 1.0,
+        "macro_precision": 1.0,
+        "macro_recall": 1.0,
+        "macro_f1": 1.0,
+        "per_class": {
+          "compliance": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 24
+          },
+          "regulatory": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 24
+          },
+          "litigation": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 24
+          },
+          "governance": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 24
+          }
+        },
+        "confusion_matrix": [
+          [
+            24,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            24,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            24,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            24
+          ]
+        ],
+        "labels": [
+          "compliance",
+          "regulatory",
+          "litigation",
+          "governance"
+        ]
+      },
+      "best": "tfidf"
+    }
+  }
+}

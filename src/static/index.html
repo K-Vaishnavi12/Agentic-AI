@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corporate Intelligence — Offline</title>
+  <style>
+    :root {
+      --bg: #0d1412;
+      --bg-soft: #111c18;
+      --surface: #16231e;
+      --surface-hover: #1c2b25;
+      --border: #24382f;
+      --text: #eef4f0;
+      --text-muted: #8fa99a;
+      --accent: #5d9b84;
+      --accent-soft: #7ab89e;
+      --warm: #c9a87c;
+      --success: #5d9b84;
+      --danger: #c75d5d;
+      --chart-up: #5d9b84;
+      --chart-down: #c75d5d;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: var(--bg);
+      background-image:
+        radial-gradient(ellipse 100% 60% at 50% -10%, rgba(93, 155, 132, 0.12), transparent 55%),
+        radial-gradient(ellipse 70% 50% at 100% 50%, rgba(201, 168, 124, 0.06), transparent 50%),
+        radial-gradient(ellipse 60% 40% at 0% 80%, rgba(93, 155, 132, 0.08), transparent 50%);
+      color: var(--text);
+      overflow: hidden;
+    }
+    .page {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+      padding: 1.5rem 2.25rem 1.75rem;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+    .badge {
+      background: rgba(93, 155, 132, 0.2);
+      color: var(--accent-soft);
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid rgba(93, 155, 132, 0.35);
+    }
+    .intro {
+      text-align: center;
+      margin-bottom: 1.75rem;
+      flex-shrink: 0;
+    }
+    .intro h2 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.85rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .intro p {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      line-height: 1.5;
+    }
+    .intro-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin: 0 auto 1rem;
+      opacity: 0.8;
+      box-shadow: 0 0 20px rgba(93, 155, 132, 0.4);
+    }
+    .bots-wrap {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .bots-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-rows: 1fr;
+      gap: 1.35rem;
+      flex: 1;
+      min-height: 200px;
+      padding: 0.35rem 0;
+    }
+    @media (max-width: 900px) {
+      .bots-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 520px) {
+      .bots-grid { grid-template-columns: 1fr; }
+    }
+    .bot-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 1.6rem 1.85rem;
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      min-height: 140px;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+    .bot-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(93, 155, 132, 0.2);
+      border-color: rgba(93, 155, 132, 0.5);
+      background: var(--surface-hover);
+    }
+    .bot-card:active { transform: translateY(-2px); }
+    .bot-card .icon { font-size: 2.4rem; margin-bottom: 0.65rem; line-height: 1; filter: grayscale(0.1); }
+    .bot-card h3 { margin: 0 0 0.5rem 0; font-size: 1.18rem; font-weight: 600; color: var(--text); }
+    .bot-card p { margin: 0; font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; }
+    .bot-card.bot-briefing { grid-column: 1 / -1; min-height: 100px; }
+    .panel-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(13, 20, 18, 0.75);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .panel-overlay.open {
+      display: flex;
+      opacity: 1;
+    }
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      width: 94vw;
+      max-width: 720px;
+      height: 88vh;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 28px 60px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(93, 155, 132, 0.08);
+      transform: scale(0.97);
+      transition: transform 0.3s ease;
+    }
+    .panel-overlay.open .panel { transform: scale(1); }
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.35rem 1.6rem;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(93, 155, 132, 0.1) 0%, transparent 100%);
+      border-radius: 24px 24px 0 0;
+    }
+    .panel-header h2 { margin: 0; font-size: 1.22rem; font-weight: 600; display: flex; align-items: center; gap: 0.55rem; color: var(--text); }
+    .panel-header .panel-title-icon { font-size: 1.4rem; }
+    .panel-close {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      width: 38px; height: 38px;
+      border-radius: 12px;
+      font-size: 1.25rem;
+      cursor: pointer;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .panel-close:hover { background: var(--surface-hover); color: var(--text); border-color: var(--accent); }
+    .panel-body {
+      padding: 1.75rem 1.85rem;
+      overflow: auto;
+      flex: 1;
+      min-height: 0;
+    }
+    .panel-section {
+      margin-bottom: 1.75rem;
+    }
+    .panel-section:last-child { margin-bottom: 0; }
+    .panel-section-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+    }
+    .panel-body .desc { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem; line-height: 1.5; }
+    .panel-body label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 0.5rem; color: var(--text-muted); }
+    .panel-body textarea {
+      width: 100%;
+      min-height: 88px;
+      padding: 1rem 1.1rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      resize: vertical;
+      margin-bottom: 0;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .panel-body textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(93, 155, 132, 0.25);
+    }
+    .btn {
+      background: linear-gradient(135deg, var(--accent), #4a8a73);
+      color: #fff;
+      border: none;
+      padding: 0.8rem 1.6rem;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(93, 155, 132, 0.35); }
+    .btn:active { transform: translateY(0); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .status-panel {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 1rem;
+      min-height: 1.5em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent-soft);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .result-chart {
+      margin-top: 0;
+      margin-bottom: 0;
+      padding: 1.5rem;
+      background: var(--bg);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      display: none;
+    }
+    .result-chart.visible {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+    .stock-vs-sensex {
+      margin-top: 0;
+      margin-bottom: 0;
+      padding: 1.35rem 1.5rem;
+      background: rgba(93, 155, 132, 0.1);
+      border: 1px solid rgba(93, 155, 132, 0.25);
+      border-radius: 16px;
+      display: none;
+    }
+    .stock-vs-sensex.visible {
+      display: block;
+      animation: fadeIn 0.35s ease;
+    }
+    .stock-vs-sensex h4 { margin: 0 0 0.6rem 0; font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .stock-vs-sensex .stock-value { font-size: 1.35rem; font-weight: 700; color: var(--accent-soft); line-height: 1.3; }
+    .stock-vs-sensex .stock-meta { font-size: 0.95rem; color: var(--text-muted); margin-top: 0.5rem; }
+    .stock-vs-sensex .vs-sensex { margin-top: 0.75rem; font-size: 0.95rem; color: var(--text); line-height: 1.45; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .result-chart h4 { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 1rem 0; color: var(--text-muted); }
+    .result-chart .chart-wrap { border-radius: 12px; overflow: hidden; border: 1px solid var(--border); padding-bottom: 8px; }
+    .result-chart svg { display: block; width: 100%; height: 280px; }
+    .result-chart .legend { display: flex; gap: 1.25rem; margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted); }
+    .result-chart .legend span { display: flex; align-items: center; gap: 0.4rem; }
+    .result-chart .legend .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .all-stocks-table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); }
+    .all-stocks-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    .all-stocks-table th, .all-stocks-table td { padding: 0.6rem 0.85rem; text-align: left; border-bottom: 1px solid var(--border); }
+    .all-stocks-table th { background: var(--surface); color: var(--text-muted); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .all-stocks-table tr:last-child td { border-bottom: none; }
+    .all-stocks-table tr:hover td { background: var(--surface-hover); }
+    .all-stocks-table .pct-up { color: var(--chart-up); font-weight: 600; }
+    .all-stocks-table .pct-down { color: var(--chart-down); font-weight: 600; }
+    .all-stocks-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .result-box {
+      margin-top: 0;
+      padding: 1.5rem;
+      background: var(--bg);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      white-space: pre-wrap;
+      font-size: 0.95rem;
+      line-height: 1.65;
+      flex: 1;
+      min-height: 140px;
+      overflow: auto;
+      display: none;
+    }
+    .result-box.visible {
+      display: block;
+      animation: fadeIn 0.35s ease;
+    }
+    .error {
+      color: var(--danger);
+      font-size: 0.9rem;
+      margin-top: 0.75rem;
+      padding: 0.85rem;
+      background: rgba(199, 93, 93, 0.12);
+      border-radius: 12px;
+      border: 1px solid rgba(199, 93, 93, 0.3);
+    }
+    .bot-intro { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1.25rem; line-height: 1.6; }
+    .bot-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 1.35rem;
+    }
+    .bot-stat {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.45rem 0.75rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .bot-stat strong { color: var(--accent-soft); margin-right: 0.2rem; }
+    .bot-covers {
+      margin-bottom: 1.5rem;
+    }
+    .bot-covers h4 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin: 0 0 0.5rem 0; }
+    .bot-covers ul { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 0.45rem; }
+    .bot-covers li {
+      background: rgba(93, 155, 132, 0.12);
+      color: var(--accent-soft);
+      padding: 0.35rem 0.7rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      border: 1px solid rgba(93, 155, 132, 0.2);
+    }
+    .result-block { margin-top: 1.85rem; }
+    .result-block .panel-section-title { margin-bottom: 0.75rem; }
+  </style>
+</head>
+<body>
+  <div class="page">
+  <div class="header">
+    <h1>Corporate Intelligence</h1>
+    <span class="badge">Local · No cloud</span>
+  </div>
+  <div class="intro">
+    <div class="intro-dot"></div>
+    <h2>What do you want to choose?</h2>
+    <p>Select an agent below to explore market, legal, risk, or executive intelligence.</p>
+  </div>
+  <div class="bots-wrap">
+    <div class="bots-grid" id="botsGrid"></div>
+  </div>
+  </div>
+
+  <div class="panel-overlay" id="overlay">
+    <div class="panel">
+      <div class="panel-header">
+        <h2 id="panelTitle">Bot</h2>
+        <button class="panel-close" id="panelClose" type="button" aria-label="Close">&times;</button>
+      </div>
+      <div class="panel-body">
+        <div class="panel-section">
+          <p class="bot-intro" id="panelIntro"></p>
+          <div class="bot-stats" id="panelStats"></div>
+          <div class="bot-covers" id="panelCovers"></div>
+        </div>
+        <div class="panel-section" id="panelRequirement">
+          <div class="panel-section-title">Your request</div>
+          <label for="requirementInput">Requirements (optional)</label>
+          <textarea id="requirementInput" placeholder="e.g. Current stocks, gold, Reliance, compliance due this month..."></textarea>
+        </div>
+        <div id="panelBriefingOnly" style="display: none;" class="panel-section">
+          <p class="desc">Runs all agents and produces one unified executive briefing.</p>
+        </div>
+        <div class="panel-section">
+          <button class="btn" id="generateBtn">Generate</button>
+          <div class="status-panel" id="panelStatus"></div>
+          <div class="error" id="panelError" style="display: none;"></div>
+        </div>
+        <div class="panel-section result-block" id="resultStockVsSensexWrap" style="display: none;">
+          <div class="panel-section-title">Requested stock</div>
+          <div class="stock-vs-sensex" id="resultStockVsSensex"></div>
+        </div>
+        <div class="panel-section result-block" id="resultChartWrap" style="display: none;">
+          <div class="panel-section-title">Chart</div>
+          <div class="result-chart" id="resultChart"></div>
+        </div>
+        <div class="panel-section result-block" id="resultAllStocksWrap" style="display: none;">
+          <div class="panel-section-title">All stock details</div>
+          <div class="all-stocks-table-wrap">
+            <table class="all-stocks-table" id="resultAllStocks"></table>
+          </div>
+        </div>
+        <div class="panel-section result-block" id="resultBoxWrap" style="display: none;">
+          <div class="panel-section-title">Summary</div>
+          <div class="result-box" id="resultBox"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const BOTS = [
+      { id: 'stock', name: 'Stock Agent', desc: 'Market data, rising/falling stocks, and investor alerts. Requests for "graphs" or "current stocks" show a bar chart above the summary.', icon: '📈',
+        intro: 'Track market data, price moves, and alerts. Ask for current stocks or graphs to see a live chart.',
+        covers: ['Rising stocks', 'Falling stocks', 'Price chart', 'Investor alerts', 'Volume'] },
+      { id: 'legal', name: 'Legal Agent', desc: 'MCA21, SEBI, regulatory changes, and compliance.', icon: '⚖️',
+        intro: 'Stay on top of MCA21, SEBI, and compliance. Get summaries and deadlines.',
+        covers: ['Compliance items', 'Regulatory changes', 'MCA21', 'SEBI', 'Deadlines'] },
+      { id: 'startup', name: 'Startup Intelligence', desc: 'New businesses, founders, sectors, funding.', icon: '🚀',
+        intro: 'Discover new registrations, founders, sectors, and funding activity.',
+        covers: ['New entities', 'Founders', 'Sectors', 'Funding stage', 'Registration'] },
+      { id: 'risk', name: 'Risk Agent', desc: 'Financial volatility vs legal exposure, danger zones.', icon: '⚠️',
+        intro: 'Cross-reference market volatility with legal exposure. Flag danger zones.',
+        covers: ['Danger zones', 'Risk score', 'Volatility', 'Compliance exposure'] },
+      { id: 'shareholder', name: 'Shareholder Agent', desc: 'Dividends, equity movements, board decisions.', icon: '👥',
+        intro: 'Summaries for shareholders: dividends, equity moves, and board decisions.',
+        covers: ['Dividends', 'Equity movements', 'Board decisions', 'Summary'] },
+      { id: 'briefing', name: 'Executive Briefing', desc: 'Run all agents and get one unified briefing for the Chairman.', icon: '📋', isBriefing: true,
+        intro: 'One unified report from all agents: market, legal, startup, risk, and shareholder.',
+        covers: ['Executive summary', 'Market & stock', 'Legal & compliance', 'Startup/competitive', 'Risk', 'Shareholder'] }
+    ];
+
+    const overlay = document.getElementById('overlay');
+    const panelTitle = document.getElementById('panelTitle');
+    const panelIntro = document.getElementById('panelIntro');
+    const panelStats = document.getElementById('panelStats');
+    const panelCovers = document.getElementById('panelCovers');
+    const panelRequirement = document.getElementById('panelRequirement');
+    const panelBriefingOnly = document.getElementById('panelBriefingOnly');
+    const requirementInput = document.getElementById('requirementInput');
+    const generateBtn = document.getElementById('generateBtn');
+    const panelStatus = document.getElementById('panelStatus');
+    const panelError = document.getElementById('panelError');
+    const resultBox = document.getElementById('resultBox');
+    const resultChart = document.getElementById('resultChart');
+    const resultStockVsSensex = document.getElementById('resultStockVsSensex');
+    const resultChartWrap = document.getElementById('resultChartWrap');
+    const resultStockVsSensexWrap = document.getElementById('resultStockVsSensexWrap');
+    const resultAllStocks = document.getElementById('resultAllStocks');
+    const resultAllStocksWrap = document.getElementById('resultAllStocksWrap');
+    const resultBoxWrap = document.getElementById('resultBoxWrap');
+
+    const role = 'chairman';
+
+    function setStatus(text, loading) {
+      panelStatus.innerHTML = loading ? '<span class="spinner"></span> ' + text : text;
+    }
+
+    function renderChart(chartData) {
+      if (!chartData || chartData.length === 0) {
+        resultChart.classList.remove('visible');
+        resultChart.innerHTML = '';
+        if (resultChartWrap) resultChartWrap.style.display = 'none';
+        return;
+      }
+      const maxBars = 12;
+      const data = chartData.length > maxBars ? chartData.slice(0, maxBars) : chartData;
+      const maxAbs = Math.max(1, ...data.map(d => Math.abs(d.change_pct)));
+      const w = 540; const h = 40 + data.length * 26;
+      const pad = { left: 82, right: 52, top: 20, bottom: 20 };
+      const rowH = 24;
+      const barCenterX = pad.left + (w - pad.left - pad.right) / 2;
+      const barHalfW = (w - pad.left - pad.right) / 2 - 4;
+      const scale = barHalfW / maxAbs;
+      let svg = '<div class="chart-wrap"><svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="xMidYMid meet">';
+      svg += '<line x1="' + barCenterX + '" y1="' + pad.top + '" x2="' + barCenterX + '" y2="' + (h - pad.bottom) + '" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 2"/>';
+      data.forEach((d, i) => {
+        const val = d.change_pct;
+        const color = val >= 0 ? 'var(--chart-up)' : 'var(--chart-down)';
+        const barY = pad.top + i * rowH + 4;
+        const barH = rowH - 6;
+        const x1 = val >= 0 ? barCenterX : barCenterX + val * scale;
+        const x2 = val >= 0 ? barCenterX + val * scale : barCenterX;
+        const sym = (d.symbol || '').replace(/</g, '&lt;');
+        svg += '<rect x="' + Math.min(x1, x2) + '" y="' + barY + '" width="' + Math.abs(x2 - x1) + '" height="' + barH + '" fill="' + color + '" rx="3"/>';
+        svg += '<text x="' + (pad.left - 8) + '" y="' + (barY + barH / 2 + 4) + '" text-anchor="end" fill="var(--text)" font-size="12" font-weight="600">' + sym + '</text>';
+        const pctX = val >= 0 ? x2 + 6 : x1 - 6;
+        const pctAnchor = val >= 0 ? 'start' : 'end';
+        const pctFill = val >= 0 ? color : 'rgba(255,255,255,0.95)';
+        svg += '<text x="' + pctX + '" y="' + (barY + barH / 2 + 4) + '" text-anchor="' + pctAnchor + '" fill="' + pctFill + '" font-size="11" font-weight="600">' + (val >= 0 ? '+' : '') + val.toFixed(1) + '%</text>';
+      });
+      if (chartData.length > maxBars) {
+        svg += '<text x="' + (w - 8) + '" y="' + (h - 6) + '" text-anchor="end" fill="var(--text-muted)" font-size="10">' + maxBars + ' of ' + chartData.length + '</text>';
+      }
+      svg += '</svg></div><div class="legend"><span><span class="dot" style="background:var(--chart-up)"></span> Gain</span><span><span class="dot" style="background:var(--chart-down)"></span> Loss</span></div>';
+      resultChart.innerHTML = svg;
+      resultChart.classList.add('visible');
+      if (resultChartWrap) resultChartWrap.style.display = 'block';
+    }
+
+    function clearChart() {
+      resultChart.classList.remove('visible');
+      resultChart.innerHTML = '';
+      if (resultChartWrap) resultChartWrap.style.display = 'none';
+    }
+    function renderStockVsSensex(requested, comparison) {
+      if (!requested || !comparison) {
+        resultStockVsSensex.classList.remove('visible');
+        resultStockVsSensex.innerHTML = '';
+        if (resultStockVsSensexWrap) resultStockVsSensexWrap.style.display = 'none';
+        return;
+      }
+      const priceStr = typeof comparison.requested_price === 'number' ? '₹' + comparison.requested_price.toLocaleString('en-IN') : comparison.requested_price;
+      const sensexStr = 'Sensex ' + (comparison.sensex_level != null ? comparison.sensex_level.toLocaleString('en-IN') : '') + ' (' + (comparison.sensex_change_pct >= 0 ? '+' : '') + comparison.sensex_change_pct + '%)';
+      const diff = comparison.difference_pct;
+      const vsText = diff > 0 ? 'Outperforming Sensex by ' + diff + '%' : 'Underperforming Sensex by ' + Math.abs(diff) + '%';
+      resultStockVsSensex.innerHTML = '<div class="stock-value">' + (comparison.requested_symbol || '') + ' — ' + priceStr + '</div><div class="stock-meta">' + (comparison.requested_change_pct >= 0 ? '+' : '') + comparison.requested_change_pct + '% today</div><div class="vs-sensex">' + sensexStr + ' · ' + vsText + '</div>';
+      resultStockVsSensex.classList.add('visible');
+      if (resultStockVsSensexWrap) resultStockVsSensexWrap.style.display = 'block';
+    }
+    function clearStockVsSensex() {
+      resultStockVsSensex.classList.remove('visible');
+      resultStockVsSensex.innerHTML = '';
+      if (resultStockVsSensexWrap) resultStockVsSensexWrap.style.display = 'none';
+    }
+    function renderAllStocks(allStocks) {
+      if (!allStocks || allStocks.length === 0) {
+        resultAllStocks.innerHTML = '';
+        if (resultAllStocksWrap) resultAllStocksWrap.style.display = 'none';
+        return;
+      }
+      const fmtNum = n => (n == null || n === '') ? '—' : Number(n).toLocaleString('en-IN', { maximumFractionDigits: 2 });
+      let html = '<thead><tr><th>Symbol</th><th class="num">Price</th><th class="num">Change %</th><th class="num">Volume</th><th>Name</th></tr></thead><tbody>';
+      allStocks.forEach(s => {
+        const pct = s.change_pct != null ? Number(s.change_pct) : null;
+        const pctClass = pct > 0 ? ' pct-up' : pct < 0 ? ' pct-down' : '';
+        const pctStr = pct != null ? (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%' : '—';
+        html += '<tr><td><strong>' + (s.symbol || '—') + '</strong></td><td class="num">' + fmtNum(s.price) + '</td><td class="num' + pctClass + '">' + pctStr + '</td><td class="num">' + fmtNum(s.volume) + '</td><td>' + (s.name || '—') + '</td></tr>';
+      });
+      html += '</tbody>';
+      resultAllStocks.innerHTML = html;
+      if (resultAllStocksWrap) resultAllStocksWrap.style.display = 'block';
+    }
+    function clearAllStocks() {
+      resultAllStocks.innerHTML = '';
+      if (resultAllStocksWrap) resultAllStocksWrap.style.display = 'none';
+    }
+
+    function renderStats(botId, stats) {
+      if (!stats) { panelStats.innerHTML = ''; panelStats.style.display = 'none'; return; }
+      panelStats.style.display = 'flex';
+      let html = '';
+      if (botId === 'stock') html = '<span class="bot-stat"><strong>' + stats.stock.total + '</strong> stocks</span><span class="bot-stat"><strong>' + stats.stock.rising + '</strong> rising</span><span class="bot-stat"><strong>' + stats.stock.falling + '</strong> falling</span>';
+      else if (botId === 'legal') html = '<span class="bot-stat"><strong>' + stats.legal.total + '</strong> items</span><span class="bot-stat"><strong>' + stats.legal.compliance + '</strong> compliance</span>';
+      else if (botId === 'startup') html = '<span class="bot-stat"><strong>' + stats.startup.total + '</strong> entities</span><span class="bot-stat"><strong>' + stats.startup.sectors + '</strong> sectors</span>';
+      else if (botId === 'risk') html = '<span class="bot-stat"><strong>' + stats.risk.stock_count + '</strong> stock data</span><span class="bot-stat"><strong>' + stats.risk.legal_count + '</strong> legal items</span>';
+      else if (botId === 'shareholder') html = '<span class="bot-stat"><strong>' + stats.shareholder.total + '</strong> items</span>';
+      else if (botId === 'briefing') html = '<span class="bot-stat">All agents</span><span class="bot-stat">Unified report</span>';
+      panelStats.innerHTML = html;
+    }
+
+    function openPanel(bot) {
+      panelTitle.innerHTML = '<span class="panel-title-icon">' + bot.icon + '</span> ' + bot.name;
+      panelIntro.textContent = bot.intro || bot.desc;
+      requirementInput.value = '';
+      panelError.style.display = 'none';
+      panelError.textContent = '';
+      setStatus('', false);
+      resultBox.textContent = '';
+      resultBox.classList.remove('visible');
+      if (resultBoxWrap) resultBoxWrap.style.display = 'none';
+      clearChart();
+      clearStockVsSensex();
+      clearAllStocks();
+      panelCovers.innerHTML = (bot.covers && bot.covers.length) ? '<h4>This agent covers</h4><ul>' + bot.covers.map(c => '<li>' + c + '</li>').join('') + '</ul>' : '';
+      fetch('/context-stats').then(r => r.json()).then(stats => renderStats(bot.id, stats)).catch(() => renderStats(bot.id, null));
+      if (bot.isBriefing) {
+        panelRequirement.style.display = 'none';
+        panelBriefingOnly.style.display = 'block';
+      } else {
+        panelRequirement.style.display = 'block';
+        panelBriefingOnly.style.display = 'none';
+      }
+      overlay.dataset.botId = bot.id;
+      overlay.dataset.isBriefing = bot.isBriefing ? '1' : '0';
+      overlay.classList.add('open');
+    }
+
+    document.getElementById('panelClose').addEventListener('click', () => overlay.classList.remove('open'));
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('open'); });
+
+    BOTS.forEach(bot => {
+      const card = document.createElement('div');
+      card.className = 'bot-card' + (bot.isBriefing ? ' bot-briefing' : '');
+      card.innerHTML = '<div class="icon">' + bot.icon + '</div><h3>' + bot.name + '</h3><p>' + bot.desc + '</p>';
+      card.addEventListener('click', () => openPanel(bot));
+      document.getElementById('botsGrid').appendChild(card);
+    });
+
+    generateBtn.addEventListener('click', async () => {
+      const botId = overlay.dataset.botId;
+      const isBriefing = overlay.dataset.isBriefing === '1';
+      const requirement = requirementInput.value.trim();
+      panelError.style.display = 'none';
+      panelError.textContent = '';
+      resultBox.classList.remove('visible');
+      resultBox.textContent = '';
+      if (resultBoxWrap) resultBoxWrap.style.display = 'none';
+      clearChart();
+      clearStockVsSensex();
+      clearAllStocks();
+      generateBtn.disabled = true;
+      setStatus('Running…', true);
+
+      try {
+        if (isBriefing) {
+          const res = await fetch('/briefing?role=' + role);
+          if (!res.ok) throw new Error(await res.text());
+          const data = await res.json();
+          resultBox.textContent = data.executive_briefing || 'No briefing generated.';
+          resultBox.classList.add('visible');
+          if (resultBoxWrap) resultBoxWrap.style.display = 'block';
+        } else {
+          const res = await fetch('/agent/' + botId + '/run?role=' + role, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ requirement: requirement || null })
+          });
+          if (!res.ok) throw new Error(await res.text());
+          const data = await res.json();
+          if (data.chart_data && data.chart_data.length > 0) renderChart(data.chart_data);
+          else clearChart();
+          if (data.requested_stock && data.sensex_comparison) renderStockVsSensex(data.requested_stock, data.sensex_comparison);
+          else clearStockVsSensex();
+          if (data.all_stocks && data.all_stocks.length > 0) renderAllStocks(data.all_stocks);
+          else clearAllStocks();
+          var fullText = data.summary != null ? data.summary : '';
+          if (data.rising && data.rising.length) fullText += '\n\nRising: ' + data.rising.map(r => r.symbol + ' ' + (r.change_pct != null ? r.change_pct + '%' : '')).join(', ');
+          if (data.falling && data.falling.length) fullText += '\n\nFalling: ' + data.falling.map(f => f.symbol + ' ' + (f.change_pct != null ? f.change_pct + '%' : '')).join(', ');
+          if (data.compliance_items && data.compliance_items.length) fullText += '\n\nCompliance: ' + JSON.stringify(data.compliance_items);
+          if (data.danger_zones && data.danger_zones.length) fullText += '\n\nDanger zones: ' + JSON.stringify(data.danger_zones);
+          if (!fullText) fullText = JSON.stringify(data, null, 2);
+          resultBox.textContent = fullText;
+          resultBox.classList.add('visible');
+          if (resultBoxWrap) resultBoxWrap.style.display = 'block';
+        }
+        setStatus('Done.', false);
+      } catch (e) {
+        panelError.textContent = 'Error: ' + e.message;
+        panelError.style.display = 'block';
+        setStatus('', false);
+      }
+      generateBtn.disabled = false;
+    });
+  </script>
+</body>
+</html>
